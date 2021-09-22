@@ -1,0 +1,21 @@
+       Ctl-Opt Option(*Nodebugio:*Srcstmt:*Nounref) ;        
+       Dcl-S ResponseMsg       Varchar(600) ;          
+       Dcl-S ResponseHeader    Varchar(1000) ;         
+       Dcl-S ReturnedSQLCode   Char(5) ;               
+       Dcl-S w_Url             Char(4096) ;      
+       
+       // URL
+       W_url = 'https://gorest.co.in/public-api/users';
+       
+      Exec sql set option commit = *none;
+      
+      // URL encoding
+       Exec sql CALL QSYS2.QCMDEXC('CHGJOB CCSID(37)');
+       
+      // Call API to get the values
+        EXEC SQL                                          
+        SELECT DATA INTO :ResponseMsg FROM(VALUES          
+        CHAR(SYSTOOLS.HTTPGETCLOB(:w_Url,''),4096)        
+        ) WS(DATA); 
+        
+      // 
